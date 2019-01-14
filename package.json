@@ -1,0 +1,50 @@
+{
+  "name": "mythx-js-sdk",
+  "version": "0.1.0",
+  "description": "Collection of reusable functions and classes used in mythx apps.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run build-ts && npm run tslint",
+    "test": "nyc --require ts-node/register --require source-map-support/register mocha test/**/*.ts",
+    "build-ts": "tsc",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConsenSys/mythx-js-sdk.git"
+  },
+  "author": "Daniyar Chambylov <dan.chambylov@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ConsenSys/mythx-js-sdk/issues"
+  },
+  "homepage": "https://github.com/ConsenSys/mythx-js-sdk#readme",
+  "devDependencies": {
+    "@types/assert": "^1.4.1",
+    "@types/async": "^2.0.50",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "assert": "^1.4.1",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9",
+    "nyc": "^13.1.0",
+    "source-map-support": "^0.5.10",
+    "ts-mocha": "^2.0.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "dist"
+    ],
+    "all": true  
+  }
+}
