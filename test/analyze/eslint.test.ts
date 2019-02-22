@@ -1,5 +1,5 @@
 import assert  from 'assert';
-import { isFatal, calculateErrors, calculateWarnings } from '../../src/analyze/eslint';
+import { isFatal, calculateErrors, calculateWarnings, getUniqueMessages, getUniqueIssues } from '../../src/analyze/eslint';
 
 describe('eslint', () => {
   describe('isFatal', () => {
@@ -34,6 +34,62 @@ describe('eslint', () => {
     it('should calculate total number of warnings', () => {
       const res = calculateWarnings(messages);
       assert.equal(res, 4);
+    });
+  });
+
+  describe('getUniqueMessages', () => {
+    it('should filter out duplicate messages', () => {
+      const inputMessages = [
+        { id: 1, title: 'test', severity: 2 },
+        { id: 2, title: 'test', severity: 2 },
+        { id: 1, title: 'test1', severity: 2 },
+        { id: 1, title: 'test', severity: 3 },
+        { id: 1, title: 'test', severity: 3 },
+        { id: 2, title: 'test', severity: 2 },
+        { id: 3, title: 'test', severity: 2 },
+      ];
+
+      const uniqueMessages = getUniqueMessages(inputMessages);
+      const resultMessages: any[] = [
+        { id: 1, title: 'test', severity: 2 },
+        { id: 2, title: 'test', severity: 2 },
+        { id: 1, title: 'test1', severity: 2 },
+        { id: 1, title: 'test', severity: 3 },
+        { id: 3, title: 'test', severity: 2 },
+      ];
+      assert.deepEqual(uniqueMessages, resultMessages);
+    });
+  });
+
+  describe('getUniqueIssues', () => {
+    it('should filter out duplicate issues and recalculate errors and warnings', () => {
+      const inputs = [{
+        errorCount: 5,
+        warningCount: 5,
+        messages: [
+          { id: 1, title: 'test', severity: 2 },
+          { id: 2, title: 'test', severity: 2 },
+          { id: 1, title: 'test1', severity: 2 },
+          { id: 1, title: 'test', severity: 3 },
+          { id: 1, title: 'test', severity: 3 },
+          { id: 2, title: 'test', severity: 2 },
+          { id: 3, title: 'test', severity: 2 },
+        ],
+      }];
+
+      const uniqueIssues = getUniqueIssues(inputs);
+      const expectedRsults = [{
+        errorCount: 4,
+        warningCount: 1,
+        messages: [
+          { id: 1, title: 'test', severity: 2 },
+          { id: 2, title: 'test', severity: 2 },
+          { id: 1, title: 'test1', severity: 2 },
+          { id: 1, title: 'test', severity: 3 },
+          { id: 3, title: 'test', severity: 2 },
+        ],
+      }];
+      assert.deepEqual(uniqueIssues, expectedRsults);
     });
   });
 });
