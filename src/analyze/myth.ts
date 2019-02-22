@@ -1,6 +1,6 @@
 import path from 'path';
 import { Truffle } from '../types/truffle';
-import { AnalysisRequestData } from '../types/mythx';
+import { AnalysisRequestData, AnalysisResponseData } from '../types/mythx';
 
 
 /**
@@ -41,4 +41,37 @@ export const truffle2MythrilJSON = (truffleJSON: Truffle.ContractJson, toolId: s
     toolId,
     version,
   };
+};
+
+/**
+ * Groups analysis results by sourceList for easier manipulation.
+ *
+ * @param {AnalysisResponseData} result - Analysis response object
+ */
+export const remapMythXOutput = (result: AnalysisResponseData): any => {
+  const mapped = result.sourceList.map(source => ({
+      source,
+      sourceType: result.sourceType,
+      sourceFormat: result.sourceFormat,
+      issues: [],
+  }));
+
+  if (result.issues) {
+      result.issues.forEach(issue => {
+          issue.locations.forEach(({ sourceMap }) => {
+              // const sourceListIndex = sourceMap.split(':')[2];
+              // FIXME: Only one sourceList is supported. set to 0
+              mapped[0].issues.push({
+                  swcID: issue.swcID,
+                  swcTitle: issue.swcTitle,
+                  description: issue.description,
+                  extra: issue.extra,
+                  severity: issue.severity,
+                  sourceMap,
+              });
+          });
+      });
+  }
+
+  return mapped;
 };
