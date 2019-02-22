@@ -1,21 +1,44 @@
+import path from 'path';
 import { Truffle } from '../types/truffle';
+import { AnalysisRequestData } from '../types/mythx';
 
 
 /**
  * Creates MythX compatible object
  *
- * @param truffleJSON {Truffle.ContractJson} - Truffle contract build json file
+ * @param {Truffle.ContractJson} truffleJSON - Truffle contract build json file
+ * @param {string} toolId - tool name
  * @returns new JSON file compatible with MythX API
  */
-export const truffle2MythrilJSON = (truffleJSON: Truffle.ContractJson): any => {
+export const truffle2MythrilJSON = (truffleJSON: Truffle.ContractJson, toolId: string): AnalysisRequestData => {
+  const {
+    contractName,
+    bytecode,
+    deployedBytecode,
+    sourceMap,
+    deployedSourceMap,
+    sourcePath,
+    source,
+    ast,
+    compiler: { version },
+} = truffleJSON;
 
-  // Add/remap some fields because the Mythril Platform API doesn't
-  // align with truffle's JSON
-  const mythrilJSON: any = JSON.parse(JSON.stringify(truffleJSON));
+  const sourcesKey: string = path.basename(sourcePath);
 
-  mythrilJSON.sourceList = [truffleJSON.ast.absolutePath];
-  mythrilJSON.sources = {};
-  mythrilJSON.sources[truffleJSON.contractName] = truffleJSON.source;
-
-  return mythrilJSON;
+  return {
+    contractName,
+    bytecode,
+    deployedBytecode,
+    sourceMap,
+    deployedSourceMap,
+    sourceList: [ sourcePath ],
+    sources: {
+        [sourcesKey]: {
+            source,
+            ast,
+        },
+    },
+    toolId,
+    version,
+  };
 };
