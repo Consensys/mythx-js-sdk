@@ -7,16 +7,13 @@ import * as fs from 'fs';
 import * as Parser from './parser';
 import CompilerSupplier from './compilerSupplier';
 import * as expect from 'truffle-expect';
-import * as find_contracts from 'truffle-contract-sources';
-import * as Debug from 'debug';
+import find_contracts from 'truffle-contract-sources';
 
-
-const debug = Debug('compile:profile"'); // eslint-disable-line no-unused-vars
 
 export const updated = (options: any, callback: any) => {
   expect.options(options, ['resolver']);
 
-  const contracts_directory = options.contracts_directory;
+  const contracts_directory: string = options.contracts_directory;
 
   const build_directory = options.build_mythx_contracts;
 

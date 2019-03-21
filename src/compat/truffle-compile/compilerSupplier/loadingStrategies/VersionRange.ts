@@ -1,14 +1,16 @@
-import * as Debug from 'debug';
+import debug from 'debug';
 import * as requireFromString from 'require-from-string';
 import * as fs from 'fs';
 // import * as ora from 'ora';
 import * as originalRequire from 'original-require';
-import * as request from 'request-promise';
+import request from 'request-promise';
 import * as semver from 'semver';
 import * as solcWrap from 'solc/wrapper';
 import LoadingStrategy from './LoadingStrategy';
 
-const debug = Debug('compile:compilerSupplier');
+// const debug = Debug('compile:compilerSupplier');
+
+const Debug = debug('compile:compilerSupplier');
 
 
 export default class VersionRange extends LoadingStrategy {
@@ -42,7 +44,7 @@ export default class VersionRange extends LoadingStrategy {
   public getCachedSolcByFileName(fileName: string) {
     const filePath = this.resolveCache(fileName);
     const soljson = originalRequire(filePath);
-    debug('soljson %o', soljson);
+    Debug('soljson %o', soljson);
     const wrapped = solcWrap(soljson);
     this.removeListener();
     return wrapped;

@@ -1,8 +1,6 @@
-import * as Debug from 'debug';
 import CompileError from './compileerror';
 
 
-const debug = Debug("compile:parser"); // eslint-disable-line no-unused-vars
 // Warning issued by a pre-release compiler version, ignored by this component.
 const preReleaseCompilerWarning =
   "This is a pre-release compiler version, please do not use it in production.";
@@ -30,7 +28,7 @@ export const parseImports = (body: string, solc: any) => {
 
   body = body + "\n\nimport '" + failingImportFileName + "';\n";
 
-  const solcStandardInput = {
+  const solcStandardInput: any = {
     language: "Solidity",
     sources: {
       "ParsedContract.sol": {

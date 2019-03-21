@@ -4,13 +4,10 @@ import * as OS from 'os';
 import * as path from 'path';
 import * as Profiler from './profiler';
 import * as expect from 'truffle-expect';
-import * as find_contracts from 'truffle-contract-sources';
+import find_contracts from 'truffle-contract-sources';
 import * as Config from 'truffle-config';
-import * as Debug from 'debug';
 import CompileError from './compileerror';
 import CompilerSupplier from './compilerSupplier';
-
-const debug = Debug('compile'); // eslint-disable-line no-unused-vars
 
 
 let nodeDirectory: string;
@@ -188,7 +185,7 @@ const compile = (sourcePath: string, sourceText: string, options: any, callback:
 
   // Specify compilation targets
   // Each target uses defaultSelectors, defaulting to single target `*` if targets are unspecified
-  const outputSelection = {};
+  const outputSelection: any = {};
   const targets = operatingSystemIndependentTargets;
   const targetPaths = Object.keys(targets);
 
@@ -247,7 +244,7 @@ const compile = (sourcePath: string, sourceText: string, options: any, callback:
           return error.severity === "warning";
         });
 
-        errors = errors.filter(function(error) {
+        errors = errors.filter(function(error: any) {
           return error.severity !== "warning";
         });
 
@@ -270,7 +267,7 @@ const compile = (sourcePath: string, sourceText: string, options: any, callback:
         return callback(
           new CompileError(
             standardOutput.errors
-              .map(function(error) {
+              .map(function(error: any) {
                 return error.formattedMessage;
               })
               .join()
@@ -301,8 +298,8 @@ const compile = (sourcePath: string, sourceText: string, options: any, callback:
 // contracts_directory: String. Directory where .sol files can be found.
 // quiet: Boolean. Suppress output. Defaults to false.
 // strict: Boolean. Return compiler warnings as errors. Defaults to false.
-const all = function(options, callback) {
-  find_contracts(options.contracts_directory, function(err, files) {
+const all = function(options: any, callback: Function) {
+  find_contracts(options.contracts_directory, function(err: any, files: any) {
     if (err) {
       return callback(err);
     }
@@ -346,7 +343,7 @@ const with_dependencies = (options: any, callback: any, compileAll: boolean) => 
     // "resolver"
   ]);
 
-  const config = Config.default().merge(options);
+  const config = Config['default']().merge(options);
 
   Profiler.required_sources(
     config.with({
@@ -354,7 +351,7 @@ const with_dependencies = (options: any, callback: any, compileAll: boolean) => 
       base_path: options.contracts_directory,
       // resolver: options.resolver
     }),
-    (err, allSources, required) => {
+    (err: Error, allSources: any, required: any) => {
       if (err) {
         return callback(err);
       }

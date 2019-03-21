@@ -1,4 +1,4 @@
-import * as request from 'request-promise';
+import request from 'request-promise';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 // import * as ora from 'ora';
